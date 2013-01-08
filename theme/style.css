@@ -96,6 +96,11 @@ li.current_page_item
 	background-color: #cdcdcd !important;
 }
 
+li.page_item_long
+{
+	height: 100px;
+}
+
 div.marvl_member
 {
 	border-top: #ededed 1px solid;

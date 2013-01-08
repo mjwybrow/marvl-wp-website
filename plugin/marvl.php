@@ -115,6 +115,50 @@ function marvl_filter_parse_query($wp_query)
     }
 }
 
+function marvl_show_project_list()
+{
+    global $wpdb;
+    $output = "";
+
+    $projects = $wpdb->get_results( "SELECT *
+	    FROM marvl_projects ORDER BY project_order");
+
+    foreach($projects as $project)
+    {
+	$output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software\">\n";
+        $output .= "<h2>{$project->project_title}</h2>\n";
+        $output .= "{$project->project_description_intro}\n";
+        $output .= "</div></a>\n";
+    }
+
+    return $output;
+}
+
+function marvl_show_project($project_id)
+{
+    global $wpdb;
+    $output = "";
+    
+    $projects = $wpdb->get_results( "SELECT *
+            FROM marvl_projects WHERE project_id = {$project_id}");
+
+    foreach($projects as $project)
+    {
+        $output .= "<div class=\"marvl_software\">\n";
+        $output .= "<h2>{$project->project_title}</h2>\n";
+        $output .= "{$project->project_description_intro}\n";
+        $output .= "{$project->project_description}\n";
+        $output .= "</div>\n";
+        if (strlen($project->project_url) > 0)
+        {
+            $output .= "<p>Website: <a href=\"{$project->project_url}\">{$project->project_url}</a></p>\n";
+        }
+    }
+
+    return $output;
+}
+
+
 function marvl_show_software_list()
 {
     global $wpdb;
@@ -238,6 +282,17 @@ function marvl_the_content($content)
                 $output = marvl_show_software_list(); 
             }
         }
+	elseif ($instruction == "marvl-projects")
+	{
+	    if ($marvlOpts->project_id > 0)
+	    {
+		$output = marvl_show_project($marvlOpts->project_id);
+	    }
+	    else
+	    {
+		$output = marvl_show_project_list();
+	    }
+	}
 
         if (strlen($output) > 0)
         {
@@ -301,6 +356,28 @@ function marvl_pages_items($items)
         $items = preg_replace("/(<a href=\"http:\/\/marvl.infotech.monash.edu.au\/software\/\">Software<\/a>)/", "\\1{$submenu}", $items);
     }
 
+    // Create sub-page items for projects.
+    $submenu = "";
+    $projects = $wpdb->get_results( "SELECT *
+            FROM marvl_projects ORDER BY project_order");
+    
+    foreach($projects as $project)
+    {
+        $extra = "";
+	if ($marvlOpts->project_id == $project->project_id)
+	{
+	    // This is the current page.
+	    $extra = " current_page_item";
+	}
+	$submenu .= "<li class=\"page_item page_item_long{$extra}\"><a href=\"/current-projects/?marvl_project={$project->project_id}\">{$project->project_title}</a></li>";
+    }
+    if ($submenu != "")
+    {
+	// There are some children.
+	$submenu = "<ul class='children'>" . $submenu . "</ul>";
+        $items = preg_replace("/(<a href=\"http:\/\/marvl.infotech.monash.edu.au\/current-projects\/\">Projects<\/a>)/", "\\1{$submenu}", $items);
+
+    }
 
     return $items;
 }
