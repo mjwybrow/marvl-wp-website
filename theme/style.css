@@ -1,0 +1,168 @@
+/*
+Theme Name: MArVL
+Theme URI: http://marvl.infotech.monash.edu.au/
+Author: Michael Wybrow & Steve Kieffer
+Author URI: http://wordpress.org/
+Description: MArVL website theme.
+Template: twentytwelve
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+/* =Notes
+--------------------------------------------------------------
+This stylesheet uses rem values with a pixel fallback. The rem
+values (and line heights) are calculated using two variables:
+
+$rembase:     14;
+$line-height: 24;
+
+---------- Examples
+
+* Use a pixel value with a rem fallback for font-size, padding, margins, etc.
+	padding: 5px 0;
+	padding: 0.357142857rem 0; (5 / $rembase)
+
+* Set a font-size and then set a line-height based on the font-size
+	font-size: 16px
+	font-size: 1.142857143rem; (16 / $rembase)
+	line-height: 1.5; ($line-height / 16)
+
+---------- Vertical spacing
+
+Vertical spacing between most elements should use 24px or 48px
+to maintain vertical rhythm:
+
+.my-new-div {
+	margin: 24px 0;
+	margin: 1.714285714rem 0; ( 24 / $rembase )
+}
+
+---------- Further reading
+
+http://snook.ca/archives/html_and_css/font-size-with-rem
+http://blog.typekit.com/2011/11/09/type-study-sizing-the-legible-letter/
+
+
+/* =Reset
+-------------------------------------------------------------- */
+
+@import url("../twentytwelve/style.css");
+
+body {
+	text-rendering: auto;
+}
+
+hgroup {
+	margin-left: 200px;
+}
+
+.main-navigation li ul li a {
+	background: none;
+	border: 0px;
+	width: 180px;
+	font-size: 12px;
+}
+.main-navigation li ul li a:hover {
+	background: none;
+}
+.main-navigation li a, .main-navigation li ul li a {
+	line-height: 2.5;
+	height: 30px;
+}
+
+.main-navigation li, .main-navigation li ul li {
+	height; 30px;
+	border: #cdcdcd 1px solid;
+	background-color: #efefef;
+	border-radius: 4px;
+	margin: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.main-navigation li ul li {
+	margin-top: 5px !important;
+	margin-bottom: 0px !important;
+}
+
+li.current_page_item
+{
+	border: #888 1px solid;
+	background-color: #cdcdcd !important;
+}
+
+div.marvl_member
+{
+	border-top: #ededed 1px solid;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	background-position: 10px 15px;
+	background-size: 150px 200px;
+	background-repeat: no-repeat;
+        minium-height: 220px;
+	padding-bottom: 10px;
+}
+a.marvl_object_link
+{	
+	color: #636363;
+	background-color: #AAF;
+	text-decoration: none !important;
+}
+
+a div.marvl_member:hover
+{	
+	background-color: #DDF;
+}
+
+a div.marvl_software:hover
+{	
+	background-color: #DDF;
+}
+
+div.marvl_member h2
+{
+	margin-top: 13px;
+	margin-left: 175px;
+	margin-bottom: 0px;
+}
+div.marvl_member h3
+{
+	margin-top: 5px;
+	margin-left: 175px;
+	margin-bottom: 0px;
+}
+div.marvl_member ul
+{
+	margin-top: 10px;
+	margin-left: 175px;
+	padding-left: 1.3em;
+}
+div.marvl_member ul li
+{
+	margin-left: 0px;
+}
+
+h2.site-description 
+{
+	font-size: 14px;
+}
+
+div.marvl_software
+{
+	border-top: #ededed 1px solid;
+}
+
+a div.marvl_member h2
+{
+	text-decoration: underline;
+}
+a div.marvl_software h2
+{
+	text-decoration: underline;
+}
+
