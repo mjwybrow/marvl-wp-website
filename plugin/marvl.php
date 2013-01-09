@@ -69,12 +69,14 @@ class marvl_Options
 {
     var $member_id;
     var $project_id;
+    var $project_state;
     var $software_id;
 
     function reset_query()
     {
         $this->member_id = 0;
         $this->project_id = 0;
+	$this->project_state = 2; // default to 'active' state
         $this->software_id = 0;
     }
 
@@ -90,6 +92,7 @@ function marvl_filter_query_vars($wpvarstoreset)
 {
     $wpvarstoreset[]='marvl_member';
     $wpvarstoreset[]='marvl_project';
+    $wpvarstoreset[]='marvl_project_state';
     $wpvarstoreset[]='marvl_software';
     return $wpvarstoreset;
 }
@@ -109,19 +112,49 @@ function marvl_filter_parse_query($wp_query)
     {
         $marvlOpts->project_id = intval($wp_query->query_vars['marvl_project']);
     }
+    if( !empty($wp_query->query_vars['marvl_project_state']) )
+    {
+	$marvlOpts->project_state = intval($wp_query->query_vars['marvl_project_state']);
+    }
     if( !empty($wp_query->query_vars['marvl_software']) )
     {
         $marvlOpts->software_id = intval($wp_query->query_vars['marvl_software']);
     }
 }
 
-function marvl_show_project_list()
+function marvl_show_project_list($project_state)
 {
     global $wpdb;
     $output = "";
 
-    $projects = $wpdb->get_results( "SELECT *
-	    FROM marvl_projects ORDER BY project_order");
+    // Add buttons to select project state.
+    $output .= "<nav class=\"main-navigation\" role=\"navigation\">\n";
+    $output .= "<div class=\"nav-menu\">\n<ul>\n";
+    $states = array("Proposed","Active","Completed","All");
+    for ($i = 1; $i <= 4; $i++) {
+        $extra = "";
+	if ($project_state == $i)
+	{
+	    $extra = " current_page_item";
+	}
+	$state = $states[$i-1];
+	$output .= "<li class=\"page_item{$extra}\"><a href=\"/current-projects/?marvl_project_state={$i}\">{$state}</a></li>\n";
+    }
+    $output .= "</ul></div></nav>\n";
+
+    // Add info about each project.
+    $stateEnum = array("proposed","active","completed");
+    if ($project_state == 4)
+    {
+        $projects = $wpdb->get_results( "SELECT *
+	        FROM marvl_projects ORDER BY project_order");
+    }
+    else
+    {
+	$state = $stateEnum[$project_state-1];
+        $projects = $wpdb->get_results( "SELECT *
+	        FROM marvl_projects WHERE project_state = '{$state}' ORDER BY project_order");
+    }
 
     foreach($projects as $project)
     {
@@ -290,7 +323,7 @@ function marvl_the_content($content)
 	    }
 	    else
 	    {
-		$output = marvl_show_project_list();
+		$output = marvl_show_project_list($marvlOpts->project_state);
 	    }
 	}
 
