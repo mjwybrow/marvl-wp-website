@@ -67,6 +67,11 @@ hgroup {
 	width: 180px;
 	font-size: 12px;
 }
+
+a.long_link {
+	width: 500px !important;
+}
+
 .main-navigation li ul li a:hover {
 	background: none;
 }
@@ -94,11 +99,6 @@ li.current_page_item
 {
 	border: #888 1px solid;
 	background-color: #cdcdcd !important;
-}
-
-li.page_item_long
-{
-	height: 100px;
 }
 
 div.marvl_member

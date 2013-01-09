@@ -359,7 +359,7 @@ function marvl_pages_items($items)
     // Create sub-page items for projects.
     $submenu = "";
     $projects = $wpdb->get_results( "SELECT *
-            FROM marvl_projects ORDER BY project_order");
+            FROM marvl_projects WHERE project_state = 'active' ORDER BY project_order");
     
     foreach($projects as $project)
     {
@@ -369,7 +369,7 @@ function marvl_pages_items($items)
 	    // This is the current page.
 	    $extra = " current_page_item";
 	}
-	$submenu .= "<li class=\"page_item page_item_long{$extra}\"><a href=\"/current-projects/?marvl_project={$project->project_id}\">{$project->project_title}</a></li>";
+	$submenu .= "<li class=\"page_item{$extra}\"><a class=\"long_link\" href=\"/current-projects/?marvl_project={$project->project_id}\">{$project->project_title}</a></li>";
     }
     if ($submenu != "")
     {
