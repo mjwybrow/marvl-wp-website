@@ -160,6 +160,13 @@ h2.site-description
 div.marvl_software
 {
 	border-top: #ededed 1px solid;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	background-position: 10px 55px;
+	background-size: 200px;
+	background-repeat: no-repeat;
+        minium-height: 220px;
+	padding-bottom: 10px;
 }
 
 a div.marvl_member h2
@@ -170,4 +177,5 @@ a div.marvl_software h2
 {
 	text-decoration: underline;
 }
+
 

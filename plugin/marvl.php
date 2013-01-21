@@ -76,7 +76,7 @@ class marvl_Options
     {
         $this->member_id = 0;
         $this->project_id = 0;
-	$this->project_state = 2; // default to 'active' state
+	$this->project_state = 1; // default to 'active' state
         $this->software_id = 0;
     }
 
@@ -125,12 +125,12 @@ function marvl_filter_parse_query($wp_query)
 function marvl_show_project_list($project_state)
 {
     global $wpdb;
-    $output = "";
+    $output = "<p>Click any individual project to learn more. View active, proposed and completed projects.</p>";
 
     // Add buttons to select project state.
     $output .= "<nav class=\"main-navigation\" role=\"navigation\">\n";
     $output .= "<div class=\"nav-menu\">\n<ul>\n";
-    $states = array("Proposed","Active","Completed","All");
+    $states = array("Active","Proposed","Completed","All");
     for ($i = 1; $i <= 4; $i++) {
         $extra = "";
 	if ($project_state == $i)
@@ -143,7 +143,7 @@ function marvl_show_project_list($project_state)
     $output .= "</ul></div></nav>\n";
 
     // Add info about each project.
-    $stateEnum = array("proposed","active","completed");
+    $stateEnum = array("active","proposed","completed");
     if ($project_state == 4)
     {
         $projects = $wpdb->get_results( "SELECT *
@@ -195,14 +195,22 @@ function marvl_show_project($project_id)
 function marvl_show_software_list()
 {
     global $wpdb;
-    $output = "";
+    $output = "<p>Click any piece of software we produce to learn more about it.</p>";
     
     $softwares = $wpdb->get_results( "SELECT *
             FROM marvl_software ORDER BY software_order");
 
     foreach($softwares as $software)
     {
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software\">\n";
+        $style = "";
+        if (intval($software->software_image_id) > 0)
+        {
+            $softwareUrls = $wpdb->get_results( "SELECT image_url
+                        FROM marvl_images WHERE image_id = 
+                        {$software->software_image_id}");
+            $style = " style=\"padding-left: 225px; background-image: url({$softwareUrls[0]->image_url});\"";
+        }
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software\" {$style}>\n";
         $output .= "<h2>{$software->software_title}</h2>\n";
         $output .= "{$software->software_description_intro}\n";
         $output .= "</div></a>\n";
@@ -230,6 +238,13 @@ function marvl_show_software($software_id)
         {
             $output .= "<p>Website: <a href=\"{$software->software_url}\">{$software->software_url}</a></p>\n";
         }
+        if (intval($software->software_image_id) > 0)
+        {
+            $softwareUrls = $wpdb->get_results( "SELECT image_url, image_caption
+                        FROM marvl_images WHERE image_id = 
+                        {$software->software_image_id}");
+            $output .= "<p><a href=\"{$softwareUrls[0]->image_url}\"><img style=\"border: 0px; width: 624px;\" src=\"{$softwareUrls[0]->image_url}\" /></a><br />{$softwareUrls[0]->image_caption}</p>";
+        }
     }
 
     return $output;
@@ -238,8 +253,8 @@ function marvl_show_software($software_id)
 function marvl_show_member_list()
 {
     global $wpdb;
-    $output = "";
-    
+    $output = "<p>Click any individual lab member to learn more about them.</p>";
+
     $members = $wpdb->get_results( "SELECT *
             FROM marvl_members ORDER BY member_order");
 
@@ -444,7 +459,7 @@ function marvl_the_title($title, $id)
 
 
 add_filter('the_title', 'marvl_the_title', 10, 2); 
-add_filter('wp_list_pages', 'marvl_pages_items');
+//add_filter('wp_list_pages', 'marvl_pages_items');
 add_filter('query_vars', 'marvl_filter_query_vars');
 add_filter('parse_query', 'marvl_filter_parse_query');
 add_filter('the_content', 'marvl_the_content'); 
