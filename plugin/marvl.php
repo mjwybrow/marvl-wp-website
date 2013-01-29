@@ -158,7 +158,17 @@ function marvl_show_project_list($project_state)
 
     foreach($projects as $project)
     {
-	$output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software\">\n";
+        $style = "";
+        /*
+        if (intval($project->project_image_id) > 0)
+        {
+            $projectUrls = $wpdb->get_results( "SELECT image_url
+                        FROM marvl_images WHERE image_id = 
+                        {$project->project_image_id}");
+            $style = " style=\"padding-left: 225px; background-image: url({$projectUrls[0]->image_url});\"";
+        }
+        */
+	$output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software\" {$style}>\n";
         $output .= "<h2>{$project->project_title}</h2>\n";
         $output .= "{$project->project_description_intro}\n";
         $output .= "</div></a>\n";
@@ -185,6 +195,13 @@ function marvl_show_project($project_id)
         if (strlen($project->project_url) > 0)
         {
             $output .= "<p>Website: <a href=\"{$project->project_url}\">{$project->project_url}</a></p>\n";
+        }
+        if (intval($project->project_image_id) > 0)
+        {
+            $projectUrls = $wpdb->get_results( "SELECT image_url, image_caption
+                        FROM marvl_images WHERE image_id = 
+                        {$project->project_image_id}");
+            $output .= "<p><a href=\"{$projectUrls[0]->image_url}\"><img style=\"border: 0px; width: 624px;\" src=\"{$projectUrls[0]->image_url}\" /></a><br />{$projectUrls[0]->image_caption}</p>";
         }
     }
 
