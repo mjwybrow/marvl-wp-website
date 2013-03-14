@@ -178,4 +178,11 @@ a div.marvl_software h2
 	text-decoration: underline;
 }
 
+div.notice {
+    border: dotted 1px #008fd4;
+    padding: 1em;
+    background-color: #ffe;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 
