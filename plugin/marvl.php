@@ -267,6 +267,73 @@ function marvl_show_software($software_id)
     return $output;
 }
 
+function marvl_show_publications_list()
+{
+    global $wpdb;
+    $output = "<p>The following is a list of publications authored by MArVL members.</p>";
+
+    $publications = $wpdb->get_results( "SELECT *
+            FROM marvl_publications ORDER BY publication_date DESC;");
+
+    $output .= "<ul class=\"publications\">\n";
+    foreach($publications as $publication)
+    {
+        $output .= "<li>{$publication->publication_authors}.<br />";
+        $output .= "{$publication->publication_title}.<br />";
+     
+        $contentBefore = false;
+        if ((strlen($publication->publication_conference) + strlen($publication->publication_journal)) > 0)
+        {
+            $contentBefore = true;
+            $output .= "In <i>{$publication->publication_conference}{$publication->publication_journal}</i>";
+            if (strlen($publication->publication_volume) > 0)
+            {
+                $output .= " <b>{$publication->publication_volume}</b>";
+                if (strlen($publication->publication_issue) > 0)
+                {
+                    $output .= "({$publication->publication_issue})";
+                }
+            }
+            elseif (strlen($publication->publication_issue) > 0)
+            {
+                $output .= ", issue {$publication->publication_issue}";
+            }
+        }
+        if (strlen($publication->publication_pages) > 0)
+        {
+            if ($contentBefore)
+            {
+                $output .= ", ";
+            }
+            $contentBefore = true;
+            $output .= "pages {$publication->publication_pages}";
+        }
+        if (strlen($publication->publication_publisher) > 0)
+        {
+            if ($contentBefore)
+            {
+                $output .= ", ";
+            }
+            $contentBefore = true;
+            $output .= "{$publication->publication_publisher}";
+        }
+        if ($contentBefore)
+        {
+            $output .= ", ";
+        }
+        $contentBefore = true;
+        $output .= "{$publication->publication_date}.";
+        if (strlen($publication->publication_pdf) > 0)
+        {
+            $output .= " <a href=\"{$publication->publication_pdf}\">[PDF]</a>";
+        }
+        $output .= "</li>\n";
+    }
+    $output .= "</ul>\n";
+
+    return $output;
+}
+
 function marvl_show_member_list()
 {
     global $wpdb;
@@ -307,6 +374,10 @@ function marvl_show_member($member_id)
         {
             $output .= "<p>Website: <a href=\"{$member->member_web_url}\">{$member->member_web_url}</a></p>\n";
         }
+        if (strlen($member->member_scholar_profile_url) > 0)
+        {
+            $output .= "<p>Google Scholar profile: <a href=\"{$member->member_scholar_profile_url}\">{$member->member_scholar_profile_url}</a></p>\n";
+        }
     }
 
     return $output;
@@ -335,6 +406,10 @@ function marvl_the_content($content)
             {
                 $output = marvl_show_member_list(); 
             }
+        }
+        elseif ($instruction == "marvl-publications")
+        {
+            $output = marvl_show_publications_list(); 
         }
         elseif ($instruction == "marvl-software")
         {
