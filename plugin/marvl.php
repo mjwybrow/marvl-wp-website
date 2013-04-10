@@ -76,7 +76,7 @@ class marvl_Options
     {
         $this->member_id = 0;
         $this->project_id = 0;
-	$this->project_state = 1; // default to 'active' state
+        $this->project_state = 1; // default to 'active' state
         $this->software_id = 0;
     }
 
@@ -100,7 +100,7 @@ function marvl_filter_query_vars($wpvarstoreset)
 
 function marvl_filter_parse_query($wp_query)
 {
-    global $marvlOpts;
+    global $marvlOpts, $wp_query;
     // query_posts() can be called multiple times. So reset all our variables.
     $marvlOpts->reset_query();
     // Deal with marvlOpts-specific parameters.
@@ -114,7 +114,7 @@ function marvl_filter_parse_query($wp_query)
     }
     if( !empty($wp_query->query_vars['marvl_project_state']) )
     {
-	$marvlOpts->project_state = intval($wp_query->query_vars['marvl_project_state']);
+        $marvlOpts->project_state = intval($wp_query->query_vars['marvl_project_state']);
     }
     if( !empty($wp_query->query_vars['marvl_software']) )
     {
@@ -526,15 +526,15 @@ function marvl_pages_items($items)
 // We want to change just the page title at the top of the page.
 function marvl_the_title($title, $id)
 {
-    global $wpdb;
+    global $wpdb, $marvlOpts;
 
     if( $title == "Members" && in_the_loop() )
     {
         // Work around the fact the_title is called for the titles of all 
         // pages in the menus, etc.  in_the_loop causes it not to change the
         // "Members" page title in the menus.
-        $member_id = get_query_var('marvl_member');
-        if (isset($member_id))
+        $member_id = $marvlOpts->member_id;
+        if ($member_id > 0)
         {
             $members = $wpdb->get_results( "SELECT *
                     FROM marvl_members WHERE member_id = {$member_id}");
