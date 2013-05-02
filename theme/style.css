@@ -57,6 +57,13 @@ body {
 	text-rendering: auto;
 }
 
+header.site-header
+{
+	background-size: 186px 70px;
+	background-repeat: no-repeat;
+	background-position: 0px 27px;
+}
+
 hgroup {
 	margin-left: 200px;
 }
@@ -162,11 +169,16 @@ div.marvl_software
 	border-top: #ededed 1px solid;
 	margin-top: 15px;
 	margin-bottom: 15px;
-	background-position: 10px 55px;
-	background-size: 200px;
-	background-repeat: no-repeat;
-	min-height: 220px;
 	padding-bottom: 10px;
+}
+
+div.with_image
+{
+	background-repeat: no-repeat;
+	background-position: 10px 50%;
+	background-size: 200px;
+	min-height: 220px;
+	padding-left: 225px;
 }
 
 a div.marvl_member h2
@@ -190,4 +202,46 @@ ul.publications li
 {
 	margin-bottom: 15px;
 }
+
+@media screen and (max-width: 599px) {
+	/* On smaller screens, put title text under logo, and centre logo. */
+	header.site-header
+	{
+		background-size: 186px 70px;
+		background-repeat: no-repeat;
+		background-position: 50% 27px;
+	}
+	hgroup {
+		margin-top: 90px;
+		margin-left: 0px;
+	}
+	/* On smaller displays, show software and member images centred before text, rather than to the left of text. */
+	div.with_image
+	{
+		background-position: 50% 20px;
+		min-height: 0px;
+		padding-left: 0px;
+		padding-top: 200px;
+	}
+	div.marvl_member
+	{
+		background-position: 50% 10px;
+	}
+	div.marvl_member h2
+	{
+		text-align: center;
+		margin-top: 223px;
+		margin-left: 0px;
+	}
+	div.marvl_member h3
+	{
+		text-align: center;
+		margin-left: 0px;
+	}
+	div.marvl_member ul
+	{
+		margin-left: 0px;
+	}
+}
+
 

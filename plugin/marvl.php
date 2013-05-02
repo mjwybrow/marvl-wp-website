@@ -125,7 +125,8 @@ function marvl_filter_parse_query($wp_query)
 function marvl_show_project_list($project_state)
 {
     global $wpdb;
-    $output = "<p>Click any individual project to learn more. View active, proposed and completed projects.</p>";
+    $output = "<p>In recent years group members have been awarded millions of dollars in ARC Discovery and Linkage Grants and significant investment through industry sponsored research.</p>";
+    $output .= "<p>Click any individual project to learn more. View active, proposed and completed projects.</p>";
 
     // Add buttons to select project state.
     $output .= "<nav class=\"main-navigation\" role=\"navigation\">\n";
@@ -159,16 +160,16 @@ function marvl_show_project_list($project_state)
     foreach($projects as $project)
     {
         $style = "";
-        /*
+        $extraclass = "";
         if (intval($project->project_image_id) > 0)
         {
             $projectUrls = $wpdb->get_results( "SELECT image_url
                         FROM marvl_images WHERE image_id = 
                         {$project->project_image_id}");
-            $style = " style=\"padding-left: 225px; background-image: url({$projectUrls[0]->image_url});\"";
+            $style = " style=\"background-image: url({$projectUrls[0]->image_url});\"";
+            $extraclass = " with_image";
         }
-        */
-	$output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software\" {$style}>\n";
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software{$extraclass}\" {$style}>\n";
         $output .= "<h2>{$project->project_title}</h2>\n";
         $output .= "{$project->project_description_intro}\n";
         $output .= "</div></a>\n";
@@ -220,14 +221,16 @@ function marvl_show_software_list()
     foreach($softwares as $software)
     {
         $style = "";
+        $extraclass= "";
         if (intval($software->software_image_id) > 0)
         {
             $softwareUrls = $wpdb->get_results( "SELECT image_url
                         FROM marvl_images WHERE image_id = 
                         {$software->software_image_id}");
-            $style = " style=\"padding-left: 225px; background-image: url({$softwareUrls[0]->image_url});\"";
+            $style = " style=\"background-image: url({$softwareUrls[0]->image_url});\"";
+            $extraclass = " with_image";
         }
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software\" {$style}>\n";
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software{$extraclass}\" {$style}>\n";
         $output .= "<h2>{$software->software_title}</h2>\n";
         $output .= "{$software->software_description_intro}\n";
         $output .= "</div></a>\n";
@@ -515,7 +518,7 @@ function marvl_pages_items($items)
     {
 	// There are some children.
 	$submenu = "<ul class='children'>" . $submenu . "</ul>";
-        $items = preg_replace("/(<a href=\"http:\/\/marvl.infotech.monash.edu.au\/current-projects\/\">Projects<\/a>)/", "\\1{$submenu}", $items);
+        $items = preg_replace("/(<a href=\"http:\/\/marvl.infotech.monash.edu.au\/current-projects\/\">Research<\/a>)/", "\\1{$submenu}", $items);
 
     }
 
