@@ -134,12 +134,12 @@ function marvl_show_project_list($project_state)
     $states = array("Active","Proposed","Completed","All");
     for ($i = 1; $i <= 4; $i++) {
         $extra = "";
-	if ($project_state == $i)
-	{
-	    $extra = " current_page_item";
-	}
-	$state = $states[$i-1];
-	$output .= "<li class=\"page_item{$extra}\"><a href=\"/current-projects/?marvl_project_state={$i}\">{$state}</a></li>\n";
+    if ($project_state == $i)
+    {
+        $extra = " current_page_item";
+    }
+    $state = $states[$i-1];
+    $output .= "<li class=\"page_item{$extra}\"><a href=\"/current-projects/?marvl_project_state={$i}\">{$state}</a></li>\n";
     }
     $output .= "</ul></div></nav>\n";
 
@@ -148,13 +148,13 @@ function marvl_show_project_list($project_state)
     if ($project_state == 4)
     {
         $projects = $wpdb->get_results( "SELECT *
-	        FROM marvl_projects ORDER BY project_order");
+            FROM marvl_projects ORDER BY project_order, project_title");
     }
     else
     {
-	$state = $stateEnum[$project_state-1];
+        $state = $stateEnum[$project_state-1];
         $projects = $wpdb->get_results( "SELECT *
-	        FROM marvl_projects WHERE project_state = '{$state}' ORDER BY project_order");
+            FROM marvl_projects WHERE project_state = '{$state}' ORDER BY project_order, project_title");
     }
 
     foreach($projects as $project)
@@ -169,10 +169,15 @@ function marvl_show_project_list($project_state)
             $style = " style=\"background-image: url({$projectUrls[0]->image_url});\"";
             $extraclass = " with_image";
         }
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\"><div class=\"marvl_software{$extraclass}\" {$style}>\n";
-        $output .= "<h2>{$project->project_title}</h2>\n";
-        $output .= "{$project->project_description_intro}\n";
-        $output .= "</div></a>\n";
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_project={$project->project_id}\">";
+        $output .= "<div class=\"object\"><h2>{$project->project_title}</h2>\n";
+        $output .= "<div class=\"marvl_software{$extraclass}\" {$style}>\n";
+        $output .= "{$project->project_summary_html}\n";
+        if (strlen($project->project_funding) > 0)
+        {
+            $output .= "<p><b>Funding:</b> {$project->project_funding}</p>\n";
+        }
+        $output .= "</div></div></a>\n";
     }
 
     return $output;
@@ -188,10 +193,13 @@ function marvl_show_project($project_id)
 
     foreach($projects as $project)
     {
-        $output .= "<div class=\"marvl_software\">\n";
+        $output .= "<div class=\"marvl_software object\">\n";
         $output .= "<h2>{$project->project_title}</h2>\n";
-        $output .= "{$project->project_description_intro}\n";
-        $output .= "{$project->project_description}\n";
+        $output .= "{$project->project_description_html}\n";
+        if (strlen($project->project_funding) > 0)
+        {
+            $output .= "<p><b>Funding:</b> {$project->project_funding}</p>\n";
+        }
         $output .= "</div>\n";
         if (strlen($project->project_url) > 0)
         {
@@ -230,7 +238,7 @@ function marvl_show_software_list()
             $style = " style=\"background-image: url({$softwareUrls[0]->image_url});\"";
             $extraclass = " with_image";
         }
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software{$extraclass}\" {$style}>\n";
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software object{$extraclass}\" {$style}>\n";
         $output .= "<h2>{$software->software_title}</h2>\n";
         $output .= "{$software->software_description_intro}\n";
         $output .= "</div></a>\n";
@@ -347,7 +355,7 @@ function marvl_show_member_list()
 
     foreach($members as $member)
     {
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member\" style=\"background-image: url({$member->member_image_url});\">\n";
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member object\" style=\"background-image: url({$member->member_image_url});\">\n";
         $output .= "<h2>{$member->member_title}</h2>\n";
         $output .= "<h3>{$member->member_position}</h3>\n";
         $output .= "{$member->member_interests}\n";
@@ -425,17 +433,17 @@ function marvl_the_content($content)
                 $output = marvl_show_software_list(); 
             }
         }
-	elseif ($instruction == "marvl-projects")
-	{
-	    if ($marvlOpts->project_id > 0)
-	    {
-		$output = marvl_show_project($marvlOpts->project_id);
-	    }
-	    else
-	    {
-		$output = marvl_show_project_list($marvlOpts->project_state);
-	    }
-	}
+    elseif ($instruction == "marvl-projects")
+    {
+        if ($marvlOpts->project_id > 0)
+        {
+        $output = marvl_show_project($marvlOpts->project_id);
+        }
+        else
+        {
+        $output = marvl_show_project_list($marvlOpts->project_state);
+        }
+    }
 
         if (strlen($output) > 0)
         {
@@ -507,17 +515,17 @@ function marvl_pages_items($items)
     foreach($projects as $project)
     {
         $extra = "";
-	if ($marvlOpts->project_id == $project->project_id)
-	{
-	    // This is the current page.
-	    $extra = " current_page_item";
-	}
-	$submenu .= "<li class=\"page_item{$extra}\"><a class=\"long_link\" href=\"/current-projects/?marvl_project={$project->project_id}\">{$project->project_title}</a></li>";
+        if ($marvlOpts->project_id == $project->project_id)
+        {
+            // This is the current page.
+            $extra = " current_page_item";
+        }
+        $submenu .= "<li class=\"page_item{$extra}\"><a class=\"long_link\" href=\"/current-projects/?marvl_project={$project->project_id}\">{$project->project_title}</a></li>";
     }
     if ($submenu != "")
     {
-	// There are some children.
-	$submenu = "<ul class='children'>" . $submenu . "</ul>";
+        // There are some children.
+        $submenu = "<ul class='children'>" . $submenu . "</ul>";
         $items = preg_replace("/(<a href=\"http:\/\/marvl.infotech.monash.edu.au\/current-projects\/\">Research<\/a>)/", "\\1{$submenu}", $items);
 
     }

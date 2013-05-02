@@ -108,9 +108,13 @@ li.current_page_item
 	background-color: #cdcdcd !important;
 }
 
-div.marvl_member
+a.marvl_object_link div.object
 {
 	border-top: #ededed 1px solid;
+}
+
+div.marvl_member
+{
 	margin-top: 15px;
 	margin-bottom: 15px;
 	background-position: 10px 15px;
@@ -126,12 +130,7 @@ a.marvl_object_link
 	text-decoration: none !important;
 }
 
-a div.marvl_member:hover
-{	
-	background-color: #DDF;
-}
-
-a div.marvl_software:hover
+a.marvl_object_link div:hover
 {	
 	background-color: #DDF;
 }
@@ -166,7 +165,6 @@ h2.site-description
 
 div.marvl_software
 {
-	border-top: #ededed 1px solid;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	padding-bottom: 10px;
@@ -179,6 +177,11 @@ div.with_image
 	background-size: 200px;
 	min-height: 220px;
 	padding-left: 225px;
+}
+
+div.object div.with_image
+{
+	background-position: 10px 5px;
 }
 
 a div.marvl_member h2
