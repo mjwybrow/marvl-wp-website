@@ -389,6 +389,10 @@ function marvl_show_member($member_id)
         {
             $output .= "<p>Google Scholar profile: <a href=\"{$member->member_scholar_profile_url}\">{$member->member_scholar_profile_url}</a></p>\n";
         }
+        if (strlen($member->member_researchgate_profile_url) > 0)
+        {
+            $output .= "<p>ResearchGate profile: <a href=\"{$member->member_researchgate_profile_url}\">{$member->member_researchgate_profile_url}</a></p>\n";
+        }
     }
 
     return $output;
