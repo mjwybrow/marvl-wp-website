@@ -88,7 +88,7 @@ a.long_link {
 }
 
 .main-navigation li, .main-navigation li ul li {
-	height; 30px;
+	height: 30px;
 	border: #cdcdcd 1px solid;
 	background-color: #efefef;
 	border-radius: 4px;
@@ -133,6 +133,11 @@ a.marvl_object_link
 a.marvl_object_link div:hover
 {	
 	background-color: #DDF;
+}
+
+a.marvl_object_link div:visited, .entry-content a:visited, .comment-content a:visited
+{	
+	color: #636363;
 }
 
 div.marvl_member h2
