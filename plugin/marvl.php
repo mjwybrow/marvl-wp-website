@@ -345,6 +345,20 @@ function marvl_show_publications_list()
     return $output;
 }
 
+function marvl_output_members($members)
+{
+    $output = "";
+    foreach($members as $member)
+    {
+        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member object\" style=\"background-image: url({$member->member_image_url});\">\n";
+        $output .= "<h2>{$member->member_title}</h2>\n";
+        $output .= "<h3>{$member->member_position}</h3>\n";
+        $output .= "{$member->member_interests}\n";
+        $output .= "</div></a>\n";
+    }
+    return $output;
+}
+
 function marvl_show_member_list()
 {
     global $wpdb;
@@ -352,29 +366,18 @@ function marvl_show_member_list()
 
     $members = $wpdb->get_results( "SELECT *
             FROM marvl_members WHERE member_status = 1 ORDER BY member_order");
+    $output .= marvl_output_members($members);
 
-    foreach($members as $member)
-    {
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member object\" style=\"background-image: url({$member->member_image_url});\">\n";
-        $output .= "<h2>{$member->member_title}</h2>\n";
-        $output .= "<h3>{$member->member_position}</h3>\n";
-        $output .= "{$member->member_interests}\n";
-        $output .= "</div></a>\n";
-    }
+
+    $output .= "<p>&nbsp;</p><h2>Collaborators:</h2>";
+    $members = $wpdb->get_results( "SELECT *
+            FROM marvl_members WHERE member_status = 3 ORDER BY member_order");
+    $output .= marvl_output_members($members);
 
     $output .= "<p>&nbsp;</p><h2>Past lab members:</h2>";
-
     $members = $wpdb->get_results( "SELECT *
             FROM marvl_members WHERE member_status = 2 ORDER BY member_order");
-
-    foreach($members as $member)
-    {
-        $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member object\" style=\"background-image: url({$member->member_image_url});\">\n";
-        $output .= "<h2>{$member->member_title}</h2>\n";
-        $output .= "<h3>{$member->member_position}</h3>\n";
-        $output .= "{$member->member_interests}\n";
-        $output .= "</div></a>\n";
-    }
+    $output .= marvl_output_members($members);
 
     return $output;
 }
