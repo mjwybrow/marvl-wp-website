@@ -120,8 +120,8 @@ div.marvl_member
 	background-position: 10px 15px;
 	background-size: 150px 200px;
 	background-repeat: no-repeat;
-        minium-height: 220px;
-	padding-bottom: 10px;
+        min-height: 230px;
+	padding-right: 10px;
 }
 a.marvl_object_link
 {	

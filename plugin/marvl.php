@@ -240,7 +240,7 @@ function marvl_show_software_list()
         }
         $output .= "<a class=\"marvl_object_link\" href=\"?marvl_software={$software->software_id}\"><div class=\"marvl_software object{$extraclass}\" {$style}>\n";
         $output .= "<h2>{$software->software_title}</h2>\n";
-        $output .= "{$software->software_description_intro}\n";
+        $output .= "{$software->software_description_intro_html}\n";
         $output .= "</div></a>\n";
     }
 
@@ -259,8 +259,8 @@ function marvl_show_software($software_id)
     {
         $output .= "<div class=\"marvl_software\">\n";
         $output .= "<h2>{$software->software_title}</h2>\n";
-        $output .= "{$software->software_description_intro}\n";
-        $output .= "{$software->software_description}\n";
+        $output .= "{$software->software_description_intro_html}\n";
+        $output .= "{$software->software_description_more_html}\n";
         $output .= "</div>\n";
         if (strlen($software->software_url) > 0)
         {
@@ -351,9 +351,9 @@ function marvl_output_members($members)
     foreach($members as $member)
     {
         $output .= "<a class=\"marvl_object_link\" href=\"?marvl_member={$member->member_id}\"><div class=\"marvl_member object\" style=\"background-image: url({$member->member_image_url});\">\n";
-        $output .= "<h2>{$member->member_title}</h2>\n";
-        $output .= "<h3>{$member->member_position}</h3>\n";
-        $output .= "{$member->member_interests}\n";
+        $output .= "<h2>{$member->member_name}</h2>\n";
+        $output .= "<h3>{$member->member_title}</h3>\n";
+        $output .= "{$member->member_interests_html}\n";
         $output .= "</div></a>\n";
     }
     return $output;
@@ -365,18 +365,18 @@ function marvl_show_member_list()
     $output = "<p>Click any individual lab member to learn more about them.</p>";
 
     $members = $wpdb->get_results( "SELECT *
-            FROM marvl_members WHERE member_status = 1 ORDER BY member_order");
+            FROM marvl_members WHERE member_status = 1 ORDER BY member_position");
     $output .= marvl_output_members($members);
 
 
     $output .= "<p>&nbsp;</p><h2>Collaborators:</h2>";
     $members = $wpdb->get_results( "SELECT *
-            FROM marvl_members WHERE member_status = 3 ORDER BY member_order");
+            FROM marvl_members WHERE member_status = 3 ORDER BY member_position");
     $output .= marvl_output_members($members);
 
     $output .= "<p>&nbsp;</p><h2>Past lab members:</h2>";
     $members = $wpdb->get_results( "SELECT *
-            FROM marvl_members WHERE member_status = 2 ORDER BY member_order");
+            FROM marvl_members WHERE member_status = 2 ORDER BY member_position");
     $output .= marvl_output_members($members);
 
     return $output;
@@ -393,11 +393,11 @@ function marvl_show_member($member_id)
     foreach($members as $member)
     {
         $output .= "<div class=\"marvl_member\" style=\"background-image: url({$member->member_image_url});\">\n";
-        $output .= "<h2>{$member->member_position}</h2>\n";
+        $output .= "<h2>{$member->member_title}</h2>\n";
         $output .= "<h3>{$member->member_affiliation}</h3>\n";
-        $output .= "{$member->member_interests}\n";
+        $output .= "{$member->member_interests_html}\n";
         $output .= "</div>\n";
-        $output .= "{$member->member_bio}\n";
+        $output .= "{$member->member_bio_html}\n";
         if (strlen($member->member_web_url) > 0)
         {
             $output .= "<p>Website: <a href=\"{$member->member_web_url}\">{$member->member_web_url}</a></p>\n";
@@ -483,11 +483,11 @@ function marvl_pages_items($items)
     // Create sub-page items for members.
     $submenu = "";
     $members = $wpdb->get_results( "SELECT *
-            FROM marvl_members ORDER BY member_order");
+            FROM marvl_members ORDER BY member_position");
 
     foreach($members as $member)
     {
-        $name = preg_replace("/Prof\. /", "", $member->member_title, 1);
+        $name = preg_replace("/Prof\. /", "", $member->member_name, 1);
         $name = preg_replace("/Dr\. /", "", $name, 1);
 
         $extra = "";
@@ -573,7 +573,7 @@ function marvl_the_title($title, $id)
 
             if (count($members) == 1)
             {
-                $title = $members[0]->member_title;
+                $title = $members[0]->member_name;
             }
         }
     }
