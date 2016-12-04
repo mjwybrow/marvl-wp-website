@@ -560,7 +560,7 @@ function marvl_the_title($title, $id)
 {
     global $wpdb, $marvlOpts;
 
-    if( $title == "Members" && in_the_loop() )
+    if( ($title == "People" || $title == "Members") && in_the_loop() )
     {
         // Work around the fact the_title is called for the titles of all 
         // pages in the menus, etc.  in_the_loop causes it not to change the
