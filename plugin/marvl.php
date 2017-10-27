@@ -283,64 +283,74 @@ function marvl_show_publications_list()
     global $wpdb;
     $output = "<p>The following is a list of publications authored by MArVL members.</p>";
 
-    $publications = $wpdb->get_results( "SELECT *
+    $publication_years = $wpdb->get_results( "SELECT DISTINCT publication_date
             FROM marvl_publications ORDER BY publication_date DESC;");
-
-    $output .= "<ul class=\"publications\">\n";
-    foreach($publications as $publication)
+    foreach($publication_years as $publication_years_row)
     {
-        $output .= "<li>{$publication->publication_authors}.<br />";
-        $output .= "{$publication->publication_title}.<br />";
-     
-        $contentBefore = false;
-        if ((strlen($publication->publication_conference) + strlen($publication->publication_journal)) > 0)
+        $publication_year = $publication_years_row->publication_date;
+        $output .= "<h2>{$publication_year}</h2>\n";
+
+
+        $publications = $wpdb->get_results( "SELECT *
+                FROM marvl_publications WHERE publication_date = 
+                '{$publication_year}' ORDER BY publication_date DESC;");
+
+        $output .= "<ul class=\"publications\">\n";
+        foreach($publications as $publication)
         {
-            $contentBefore = true;
-            $output .= "In <i>{$publication->publication_conference}{$publication->publication_journal}</i>";
-            if (strlen($publication->publication_volume) > 0)
+            $output .= "<li>{$publication->publication_authors}.<br />";
+            $output .= "{$publication->publication_title}.<br />";
+
+            $contentBefore = false;
+            if ((strlen($publication->publication_conference) + strlen($publication->publication_journal)) > 0)
             {
-                $output .= " <b>{$publication->publication_volume}</b>";
-                if (strlen($publication->publication_issue) > 0)
+                $contentBefore = true;
+                $output .= "In <i>{$publication->publication_conference}{$publication->publication_journal}</i>";
+                if (strlen($publication->publication_volume) > 0)
                 {
-                    $output .= "({$publication->publication_issue})";
+                    $output .= " <b>{$publication->publication_volume}</b>";
+                    if (strlen($publication->publication_issue) > 0)
+                    {
+                        $output .= "({$publication->publication_issue})";
+                    }
+                }
+                elseif (strlen($publication->publication_issue) > 0)
+                {
+                    $output .= ", issue {$publication->publication_issue}";
                 }
             }
-            elseif (strlen($publication->publication_issue) > 0)
+            if (strlen($publication->publication_pages) > 0)
             {
-                $output .= ", issue {$publication->publication_issue}";
+                if ($contentBefore)
+                {
+                    $output .= ", ";
+                }
+                $contentBefore = true;
+                $output .= "pages {$publication->publication_pages}";
             }
-        }
-        if (strlen($publication->publication_pages) > 0)
-        {
+            if (strlen($publication->publication_publisher) > 0)
+            {
+                if ($contentBefore)
+                {
+                    $output .= ", ";
+                }
+                $contentBefore = true;
+                $output .= "{$publication->publication_publisher}";
+            }
             if ($contentBefore)
             {
                 $output .= ", ";
             }
             $contentBefore = true;
-            $output .= "pages {$publication->publication_pages}";
-        }
-        if (strlen($publication->publication_publisher) > 0)
-        {
-            if ($contentBefore)
+            $output .= "{$publication->publication_date}.";
+            if (strlen($publication->publication_pdf) > 0)
             {
-                $output .= ", ";
+                $output .= " <a href=\"{$publication->publication_pdf}\">[PDF]</a>";
             }
-            $contentBefore = true;
-            $output .= "{$publication->publication_publisher}";
+            $output .= "</li>\n";
         }
-        if ($contentBefore)
-        {
-            $output .= ", ";
-        }
-        $contentBefore = true;
-        $output .= "{$publication->publication_date}.";
-        if (strlen($publication->publication_pdf) > 0)
-        {
-            $output .= " <a href=\"{$publication->publication_pdf}\">[PDF]</a>";
-        }
-        $output .= "</li>\n";
+        $output .= "</ul>\n";
     }
-    $output .= "</ul>\n";
 
     return $output;
 }
