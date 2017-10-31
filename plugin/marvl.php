@@ -281,7 +281,7 @@ function marvl_show_software($software_id)
 function marvl_show_publications_list()
 {
     global $wpdb;
-    $output = "<p>The following is a list of publications authored by MArVL members.</p>";
+    $output = "<p>The following is a list of publications authored by IALab members.</p>";
 
     $publication_years = $wpdb->get_results( "SELECT DISTINCT publication_date
             FROM marvl_publications ORDER BY publication_date DESC;");
