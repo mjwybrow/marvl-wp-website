@@ -33,7 +33,7 @@
 
 <body <?php body_class(); ?>>
 <div id="page" class="hfeed site">
-	<header id="masthead" class="site-header" role="banner" style="background-size: 350px 287px; background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/IALab-logo.jpg');">
+	<header id="masthead" class="site-header" role="banner" style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/IALab-logo.jpg');">
 		<hgroup>
 			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
 			<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>

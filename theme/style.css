@@ -59,9 +59,14 @@ body {
 
 header.site-header
 {
-	background-size: 186px 70px;
+	background-size: 175px 144px;
 	background-repeat: no-repeat;
 	background-position: 0px 27px;
+}
+
+#site-navigation
+{
+	margin-left: 186px;
 }
 
 hgroup {
@@ -124,19 +129,19 @@ div.marvl_member
 	padding-right: 10px;
 }
 a.marvl_object_link
-{	
+{
 	color: #636363;
 	background-color: #AAF;
 	text-decoration: none !important;
 }
 
 a.marvl_object_link div:hover
-{	
+{
 	background-color: #DDF;
 }
 
 a.marvl_object_link div:visited, .entry-content a:visited, .comment-content a:visited
-{	
+{
 	color: #636363;
 }
 
@@ -163,7 +168,7 @@ div.marvl_member ul li
 	margin-left: 0px;
 }
 
-h2.site-description 
+h2.site-description
 {
 	font-size: 14px;
 }
@@ -251,5 +256,3 @@ ul.publications li
 		margin-left: 0px;
 	}
 }
-
-
